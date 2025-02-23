@@ -97,3 +97,16 @@ input:focus + .passWord,
 .Toastify__close-button {
 display: none !important; 
 }
+.icon-CP {
+    width: 16px;    
+    height: 16px;  
+    background-image: url('../assets/icons/CP.png');
+    background-repeat: no-repeat;
+    animation: animateCpIcon 1.5s steps(5) infinite
+}
+@keyframes animateCpIcon {
+    100% {
+        background-position-x: -80px
+    }
+  }
+

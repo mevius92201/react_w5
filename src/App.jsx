@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 //import LoginPage from "./Component/LoginPage";
+import Icon from './Component/Icon';
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./assets/all.css"
 import axios from "axios";
@@ -11,6 +12,7 @@ function App() {
 
   const [productsData, setProductsData] = useState([]);
   const [cartProductData, setCartProductData]= useState([]);
+  const [cartChanged, setCartChanged] = useState(false);
   useEffect(() =>{
     const getProduct = async()=>{
     try{
@@ -35,13 +37,14 @@ function App() {
     )
     toast.success("商品已加入購物車", {
       position: "top-center",
-      autoClose: 3000,
+      autoClose: 1500,
       hideProgressBar: true,
       closeOnClick: true,
       pauseOnHover: false,
       draggable: false,
       theme: "colored",
     });
+    setCartChanged(!cartChanged);
     }catch(err){
       console.log("error",err);
     }
@@ -57,9 +60,30 @@ function App() {
       }
     } 
     getCartProducts()
-  },[])
- 
-  
+  },[cartChanged])
+  const removeAllCartProducts = async() =>{
+    try{
+          await axios.delete((`${API_BASE}/api/${API_PATH}/carts`))
+          toast.success("商品已全數刪除", {
+            position: "top-center",
+            autoClose: 1500,
+            hideProgressBar: true,
+            closeOnClick: true,
+            pauseOnHover: false,
+            draggable: false,
+            theme: "colored",
+          });
+          setCartChanged(!cartChanged);
+    }catch(err){
+      console.log("error",err);
+    }
+  }
+
+  function calTotalPrice(){
+    return cartProductData.reduce((acc, cur) => acc + cur.final_total, 0);
+
+  }
+
   return (
     <>
     {/* <LoginPage  /> */}
@@ -108,7 +132,8 @@ function App() {
             </tbody>
           </table>
           <div className="text-end">
-            <button className="btn btn-outline-danger" type="button">清空購物車</button>
+            <button className="btn btn-outline-danger" type="button"
+            onClick={removeAllCartProducts}>清空購物車</button>
           </div>
           <table className="table align-middle">
             <thead>
@@ -123,24 +148,29 @@ function App() {
               {/* Cart rows here */}
               {cartProductData.length > 0 && (cartProductData.map((cartProduct,index)=> (
                 <tr key={index}>
-                <td><div className="h6">{cartProduct.product.title}</div></td>
+                <td><div className="h6">{cartProduct.product.title}</div></td>                 
                 <td className="h6">{cartProduct.product.price}</td>
                 <td className="h6" style={{ width: '150px' }}>{cartProduct.qty}</td>
-                <td className="h6">{cartProduct.final_total}</td>
-              </tr>
+                <td className="h6">
+                  <span style={{ display: 'inline-flex', alignItems: 'center' }}>
+                    <Icon type="icon-CP" style={{ marginRight: '8px' }} />
+                    {cartProduct.final_total}
+                  </span></td>
+                </tr>
               )))}
             </tbody>
             <tfoot>
-              <tr>
-                <td colSpan="3" className="text-start">總計</td>
-                <td className="text-end"></td>
-              </tr>
-              <tr>
-                <td colSpan="3" className="text-end text-success">折扣價</td>
-                <td className="text-end text-success"></td>
-              </tr>
             </tfoot>
           </table>
+          <div className="text-end h5">
+          <span >總計</span>
+          <span style={{ display: 'inline-flex', alignItems: 'center' }}>
+              <Icon type="icon-CP" style={{ marginRight: '8px' }} />
+              {calTotalPrice()}
+            </span>
+          </div>
+         
+
         </div>
         <div className="my-5 row justify-content-center">
           <form className="col-md-6">
@@ -174,6 +204,9 @@ function App() {
           </form>
         </div>
       </div>
+    </div>
+    <div>
+      <ToastContainer />
     </div>
  </>
   )
