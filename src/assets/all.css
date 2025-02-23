@@ -93,6 +93,7 @@ input:focus + .passWord,
     border-radius: 20px !important;
     font-size: 14px !important; 
     padding: 5px !important; 
+    justify-content: center !important;
   }
 .Toastify__close-button {
 display: none !important; 
@@ -113,4 +114,23 @@ display: none !important;
     color: red;
     font-size: .8rem;
     
+}
+.icon-remove {
+    width: 16px;    
+    height: 16px;
+    transform: scale(0.8);
+    background-image: url('../assets/icons/remove.png');
+    background-repeat: no-repeat;
+}
+.remove-btn{
+    cursor: pointer;
+    border: none;
+    background-color: transparent;
+    color: #000;
+    font-size: 12px;
+
+}
+.remove{
+    display: flex;
+    align-items: center;
 }

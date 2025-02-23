@@ -67,7 +67,7 @@ useEffect(() => {
     const getCartProducts = async() =>{
       try{
         const res = await axios.get(`${API_BASE}/api/${API_PATH}/cart`)
-        //console.log(res.data.data.carts)
+        console.log(res.data.data.carts)
         setCartProductData(res.data.data.carts);
       }catch(err){
         console.log("error",err);
@@ -75,6 +75,26 @@ useEffect(() => {
     } 
     getCartProducts()
   },[cartChanged])
+
+  const removeCartProduct = async(id) =>{
+    try{
+          await axios.delete((`${API_BASE}/api/${API_PATH}/cart/${id}`))
+          if (!toast.isActive("remove-toast")) {
+          toast.success("商品已刪除", {
+            position: "top-center",
+            autoClose: 1500,
+            hideProgressBar: true,
+            closeOnClick: true,
+            pauseOnHover: false,
+            draggable: false,
+            theme: "colored",
+          })
+        };
+          setCartChanged((prev) => !prev);
+    }catch(err){
+      console.log("error",err);
+    }
+  }
 
   const removeAllCartProducts = async() =>{
     try{
@@ -215,11 +235,19 @@ useEffect (() => {
                 <td><div className="h6">{cartProduct.product.title}</div></td>                 
                 <td className="h6">{cartProduct.product.price}</td>
                 <td className="h6" style={{ width: '150px' }}>{cartProduct.qty}</td>
-                <td className="h6">
+                <td className="h5">
                   <span style={{ display: 'inline-flex', alignItems: 'center' }}>
                     <Icon type="icon-CP" style={{ marginRight: '8px' }} />
                     {cartProduct.final_total}
-                  </span></td>
+                  </span>
+                  <div className="remove">
+                  <span style={{ display: 'inline-flex', alignItems: 'center' }}>
+                    <Icon type="icon-remove" style={{ marginRight: '8px' }} /></span>
+                    <button className="remove-btn" type="button"
+                    onClick={()=>removeCartProduct(cartProduct.id)}>移除</button>
+                  
+                  </div>
+                </td>
                 </tr>
               ))):(
               <tr><td colSpan="4" className="h4 text-center">no product in the cart yet</td></tr>
