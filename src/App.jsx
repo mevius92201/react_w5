@@ -25,14 +25,19 @@ function App() {
   const [cartProductData, setCartProductData]= useState([]);
   const [cartChanged, setCartChanged] = useState(false);
   console.log(watch())
-  useEffect(() => {
-    const getProduct = () => {
-      axios.get(`${API_BASE}/api/${API_PATH}/products/all`)
-        .then(res => setProductsData(res.data.products))
-        .catch(err => console.log("error", err));
-    };
-    getProduct();
-  }, []);
+
+  const getProduct = async () => {
+  try {
+    const res = await axios.get(`${API_BASE}/api/${API_PATH}/products/all`);
+    setProductsData(res.data.products);
+  } catch (err) {
+    console.log("error", err);
+  }
+};
+
+useEffect(() => {
+  getProduct();
+}, []);
 
   const addProductToCart = async (productId) => {
     try{
@@ -70,6 +75,7 @@ function App() {
     } 
     getCartProducts()
   },[cartChanged])
+
   const removeAllCartProducts = async() =>{
     try{
           await axios.delete((`${API_BASE}/api/${API_PATH}/carts`))
