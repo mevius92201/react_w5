@@ -109,4 +109,8 @@ display: none !important;
         background-position-x: -80px
     }
   }
-
+.invalid-hint{
+    color: red;
+    font-size: .8rem;
+    
+}
