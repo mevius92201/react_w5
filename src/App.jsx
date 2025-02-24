@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { useForm } from "react-hook-form";
-//import LoginPage from "./Component/LoginPage";
+// import LoginPage from "./Component/LoginPage";
 import Icon from './Component/Icon';
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./assets/all.css"
@@ -170,30 +170,25 @@ useEffect (() => {
     {/* <LoginPage  /> */}
     <div id="app">
       <div className="container">
-        <div className="mt-4">
           {/* 產品Modal */}
-        
-          {/* 產品Modal */}
-          <div className="row row-cols-1 row-cols-md-4 g-4">
-          
+          <div className="card-container">
           {productsData.map((product,index) => (
-          <div className="col" key={index}>
-          <div className="card h-100" style={{ width: '18rem' }} >
-            <div className="card-body" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
-              <h5 className="card-title text-center">{product.title}</h5>
-              <img src={product.imageUrl} className="card-img-middle" alt="..." style={{ width: '10rem', height: '10rem', alignSelf: 'center' }}/>
-              
-              <div className="price-display text-start"><span style={{ display: 'inline-flex', alignItems: 'center' }}>
-                    <Icon type="icon-CP" style={{ marginRight: '8px' }} />
-                    </span>
-                    {product.origin_price && <del className="h6">{product.origin_price}</del>}
-                    <span className="h5">{`${product.price ?? "-"}`}</span></div>
-            </div>
-          </div>
+          <div className="card" key={index}>
+              <div className="card-body">
+                <div className="card-title">{product.title}</div>
+                <Icon type="icon-frame" />
+                <div style={{backgroundImage: `url(${product?.imageUrl})`}} className="card-img" alt="..." />
+                <div className="price-display">
+                  <Icon type="icon-CP" style={{ marginRight: '8px' }} />
+                  
+                  {product.origin_price && <del>{product.origin_price}</del>}
+                  <div>{`${product.price ?? "-"}`}</div>
+                </div>
+              </div>
           </div>
           ))}
           </div>
-          
+          <div className="mt-4">
           <table className="table align-middle">
             <thead>
               <tr>
