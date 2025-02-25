@@ -171,23 +171,25 @@ useEffect (() => {
     <div id="app">
       <div className="container">
           {/* 產品Modal */}
-          <div className="card-container">
+          <section className="product-board">
           {productsData.map((product,index) => (
-          <div className="card" key={index}>
-              <div className="card-body">
-                <div className="card-title">{product.title}</div>
+          <div className="product-card" key={index}>
+              <div className="product-card-body">
+                <div className="product-title">{product.title}</div>
                 <Icon type="icon-frame" />
-                <div style={{backgroundImage: `url(${product?.imageUrl})`}} className="card-img" alt="..." />
-                <div className="price-display">
+                <div style={
+                  {backgroundImage: `url(${product?.imageUrl})`}} 
+                  className="product-main-img" alt="..." />
+                <div className="product-price-display">
                   <Icon type="icon-CP" style={{ marginRight: '8px' }} />
-                  
-                  {product.origin_price && <del>{product.origin_price}</del>}
-                  <div>{`${product.price ?? "-"}`}</div>
+                  {product.origin_price > product.price ?
+                  (<><del>{product.origin_price}</del> <div>${product.price}</div></> ):
+                  (<div>${product.price}</div>)}
                 </div>
               </div>
           </div>
           ))}
-          </div>
+          </section>
           <div className="mt-4">
           <table className="table align-middle">
             <thead>
