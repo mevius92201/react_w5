@@ -137,7 +137,7 @@ display: none !important;
 .product-board{
     display: grid;
     flex-wrap: wrap;
-    justify-content: space-between;
+    justify-content: space-evenly;
     grid-template-columns: repeat(auto-fill, 14rem);
     &::after{
         content: "";
@@ -203,7 +203,7 @@ display: none !important;
     font-weight: 700;
 }
 .bg_01{
-    background-image: url('../assets/images/bg_01.png');
+    background-image: url('../assets/images/bg_01_pc.png');
     background-repeat: no-repeat;
     background-size: cover;
     background-position: center;
@@ -212,4 +212,9 @@ display: none !important;
 #app{
     background-color: rgb(33 37 42);
     color: #ffffff;
+}
+@media only screen and (max-width: 750px) and (orientation: portrait) {
+    .bg_01{
+        background-image: url('../assets/images/bg_01_mb.png');
+    }
 }
