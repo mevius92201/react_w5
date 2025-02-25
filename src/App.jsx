@@ -27,7 +27,7 @@ function App() {
   console.log(watch())
   const [hoveredProduct, setHoveredProduct] = useState(null);
   const [clickedProduct, setClickedProduct] = useState(null);
-
+  const [cardInfoPosition, setCardInfoPosition] = useState('right');
 
   const getProduct = async () => {
   try {
@@ -120,53 +120,63 @@ function App() {
     return cartProductData.reduce((acc, cur) => acc + cur.final_total, 0);
 
   }
-const onSubmit = async(data) =>{
-  try{
-  const res = await axios.post(`${API_BASE}/api/${API_PATH}/order`,{
-    "data": {
-      "user": {
-        "name": data.name,
-       "email": data.email,
-        "tel": data.tel,
-        "address": data.address,
-      },
-      "message": data.message,
-    }
-  })
-  console.log(res.data.orderId);
-  await orderPaid(res.data.orderId);
-  setCartChanged(!cartChanged);
-  
-  }catch(err){
-  console.log("error",err);
-  }
-}
-
-const orderPaid = async(orderId)=>{
-  try{
-    await axios.post(`${API_BASE}/api/${API_PATH}/pay/${orderId}`)
-  }catch(err){
+  const onSubmit = async(data) =>{
+    try{
+    const res = await axios.post(`${API_BASE}/api/${API_PATH}/order`,{
+      "data": {
+        "user": {
+          "name": data.name,
+        "email": data.email,
+          "tel": data.tel,
+          "address": data.address,
+        },
+        "message": data.message,
+      }
+    })
+    console.log(res.data.orderId);
+    await orderPaid(res.data.orderId);
+    setCartChanged(!cartChanged);
+    
+    }catch(err){
     console.log("error",err);
+    }
   }
-}
-useEffect (() => {
-  if(isSubmitSuccessful){
-    toast.success("訂單已送出", {
-      position: "top-center",
-      autoClose: 1500,
-      hideProgressBar: true,
-      closeOnClick: true,
-      pauseOnHover: false,
-      draggable: false,
-      theme: "colored",
-    });
-    reset({email: "",
-      name: "",
-      tel: "",
-      address: "",
-      message: ""});
+
+  const orderPaid = async(orderId)=>{
+    try{
+      await axios.post(`${API_BASE}/api/${API_PATH}/pay/${orderId}`)
+    }catch(err){
+      console.log("error",err);
+    }
   }
-},[isSubmitSuccessful])
+  useEffect (() => {
+    if(isSubmitSuccessful){
+      toast.success("訂單已送出", {
+        position: "top-center",
+        autoClose: 1500,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: false,
+        draggable: false,
+        theme: "colored",
+      });
+      reset({email: "",
+        name: "",
+        tel: "",
+        address: "",
+        message: ""});
+    }
+  },[isSubmitSuccessful])
+
+  const handleMouseEnter = (e) => {
+    const cardRect = e.target.getBoundingClientRect();
+    console.log("cardRect", cardRect.right, window.innerWidth);
+    if (cardRect.right > window.innerWidth) {
+      setCardInfoPosition('left'); 
+    } else {
+      setCardInfoPosition('right');
+    }
+  };
   return (
     <>
     {/* <LoginPage  /> */}
@@ -175,7 +185,9 @@ useEffect (() => {
           {/* 產品Modal */}
           <section className="product-board bg_01">
           {productsData.map((product,index) => (
-          <div className="product-card" key={index}>
+          <div className="product-card"
+          key={index}
+          onMouseEnter={handleMouseEnter}>
               <div className="product-card-body">
                 <div className="product-title">{product.title}</div>
                 <Icon type="icon-frame" />
@@ -187,55 +199,56 @@ useEffect (() => {
                   {product.origin_price > product.price ?
                   (<><del style={{fontSize: ".8rem", paddingRight: ".2rem"}}>{product.origin_price}</del><div style={{color: "#000"}}>{product.price}</div></> ):
                   (<div>${product.price}</div>)}
-                </div>
-              </div>
-              <div className ="product-card-body-mask">
-                <div className="generate-info-btn"
-                  onMouseEnter={() => setHoveredProduct(product.id)}
-                  onMouseLeave={() => setHoveredProduct(null)}
-                  onClick={() =>
-                  setClickedProduct((prev) => (prev === product.id ? null : product.id))
-                  }
-                >
-                  <img className ="generate-info-icon" src="../src/assets/icons/eye.png" alt="..." />
-                查看
-                </div>
-                <div className="product-info-board"
-                style={{ display: hoveredProduct === product.id || clickedProduct === product.id
-                      ? "block"
-                      : "none",
-                }}>
-                  <div className="product-info-container">
-                    <div className="product-info-card">
-                      <div className="product-info-card-content">
-                        <div className="product-info">
-                          <div className="product-info-title h5">INFO</div>
-                          <div className="product-info-product-name">商品：<span style={{color:"#f5e1fdc4"}}>{product.title}</span></div>
-                          <div className="product-info-product-category">分類：<span style={{color:"#f5e1fdc4"}}>{product.category}</span></div>
-                          <div className="product-info-product-description">
-                            <div className="product-info-product-description-title">
-                              <span>商品描述</span>
+                </div>            
+                <div className ="product-card-body-mask">
+                  <div className="generate-info-btn"
+                    onMouseEnter={() => setHoveredProduct(product.id)}
+                    onMouseLeave={() => setHoveredProduct(null)}
+                    
+                    onClick={() =>
+                    setClickedProduct((prev) => (prev === product.id ? null : product.id))
+                    }
+                  >
+                    <img className ="generate-info-icon" src="../src/assets/icons/eye.png" alt="..." />
+                  查看
+                  </div>
+                  <div className={`product-info-board product-info-board-${cardInfoPosition}`}
+                  style={{ display: hoveredProduct === product.id || clickedProduct === product.id
+                        ? "block"
+                        : "none",
+                  }}>
+                    <div className="product-info-container">
+                      <div className="product-info-card">
+                        <div className="product-info-card-content">
+                          <div className="product-info">
+                            <div className="product-info-title h5">INFO</div>
+                            <div className="product-info-product-name">商品：<span style={{color:"#f5e1fdc4"}}>{product.title}</span></div>
+                            <div className="product-info-product-category">分類：<span style={{color:"#f5e1fdc4"}}>{product.category}</span></div>
+                            <div className="product-info-product-description">
+                              <div className="product-info-product-description-title">
+                                <span>商品描述</span>
+                              </div>
+                              <div className="product-info-product-description-content">
+                                <span>{product.description}</span>
+                              </div>
                             </div>
-                            <div className="product-info-product-description-content">
-                              <span>{product.description}</span>
+                            <div className="product-info-price-display">售價：
+                              <Icon type="icon-CP" style={{ marginRight: '8px' }} />
+                              {product.origin_price > product.price ?
+                              (<><del style={{fontSize: ".8rem", paddingRight: ".2rem"}}>{product.origin_price}</del><div>{product.price}</div></> ):
+                              (<div>${product.price}</div>)}
                             </div>
+                            {/* <div className="product-info-product-thumbnail">
+                              {(product.imagesUrl.map((item)=><><img src=item alt="..."/></>))} 
+                            </div> */}
                           </div>
-                          <div className="product-info-price-display">售價：
-                            <Icon type="icon-CP" style={{ marginRight: '8px' }} />
-                            {product.origin_price > product.price ?
-                            (<><del style={{fontSize: ".8rem", paddingRight: ".2rem"}}>{product.origin_price}</del><div>{product.price}</div></> ):
-                            (<div>${product.price}</div>)}
-                          </div>
-                          {/* <div className="product-info-product-thumbnail">
-                            {(product.imagesUrl.map((item)=><><img src=item alt="..."/></>))} 
-                          </div> */}
                         </div>
-                      </div>
-                      <div className="product-add-cart">
-                        <button className="product-add-cart-btn"
-                        type="button"
-                        onClick={() => addProductToCart(product.id)}
-                        >加入購物車</button>
+                        <div className="product-add-cart">
+                          <button className="product-add-cart-btn"
+                          type="button"
+                          onClick={() => addProductToCart(product.id)}
+                          >加入購物車</button>
+                        </div>
                       </div>
                     </div>
                   </div>
