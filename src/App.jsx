@@ -183,7 +183,7 @@ useEffect (() => {
                 <div className="product-price-display">
                   <Icon type="icon-CP" style={{ marginRight: '8px' }} />
                   {product.origin_price > product.price ?
-                  (<><del>{product.origin_price}</del> <div>${product.price}</div></> ):
+                  (<><del style={{fontSize: ".8rem"}}>{product.origin_price}</del> <div>${product.price}</div></> ):
                   (<div>${product.price}</div>)}
                 </div>
               </div>
