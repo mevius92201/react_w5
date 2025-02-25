@@ -25,6 +25,9 @@ function App() {
   const [cartProductData, setCartProductData]= useState([]);
   const [cartChanged, setCartChanged] = useState(false);
   console.log(watch())
+  const [hoveredProduct, setHoveredProduct] = useState(null);
+  const [clickedProduct, setClickedProduct] = useState(null);
+
 
   const getProduct = async () => {
   try {
@@ -33,11 +36,10 @@ function App() {
   } catch (err) {
     console.log("error", err);
   }
-};
-
-useEffect(() => {
-  getProduct();
-}, []);
+  };
+  useEffect(() => {
+    getProduct();
+  }, []);
 
   const addProductToCart = async (productId) => {
     try{
@@ -187,11 +189,63 @@ useEffect (() => {
                   (<div>${product.price}</div>)}
                 </div>
               </div>
+              <div className ="product-card-body-mask">
+                <div className="generate-info-btn"
+                  onMouseEnter={() => setHoveredProduct(product.id)}
+                  onMouseLeave={() => setHoveredProduct(null)}
+                  onClick={() =>
+                  setClickedProduct((prev) => (prev === product.id ? null : product.id))
+                  }
+                >
+                  <img className ="generate-info-icon" src="../src/assets/icons/eye.png" alt="..." />
+                查看
+                </div>
+                <div className="product-info-board"
+                style={{ display: hoveredProduct === product.id || clickedProduct === product.id
+                      ? "block"
+                      : "none",
+                }}>
+                  <div className="product-info-container">
+                    <div className="product-info-card">
+                      <div className="product-info-card-content">
+                        <div className="product-info">
+                          <div className="product-info-title h5">INFO</div>
+                          <div className="product-info-product-name">商品：<span style={{color:"#f5e1fdc4"}}>{product.title}</span></div>
+                          <div className="product-info-product-category">分類：<span style={{color:"#f5e1fdc4"}}>{product.category}</span></div>
+                          <div className="product-info-product-description">
+                            <div className="product-info-product-description-title">
+                              <span>商品描述</span>
+                            </div>
+                            <div className="product-info-product-description-content">
+                              <span>{product.description}</span>
+                            </div>
+                          </div>
+                          <div className="product-info-price-display">售價：
+                            <Icon type="icon-CP" style={{ marginRight: '8px' }} />
+                            {product.origin_price > product.price ?
+                            (<><del style={{fontSize: ".8rem", paddingRight: ".2rem"}}>{product.origin_price}</del><div>{product.price}</div></> ):
+                            (<div>${product.price}</div>)}
+                          </div>
+                          {/* <div className="product-info-product-thumbnail">
+                            {(product.imagesUrl.map((item)=><><img src=item alt="..."/></>))} 
+                          </div> */}
+                        </div>
+                      </div>
+                      <div className="product-add-cart">
+                        <button className="product-add-cart-btn"
+                        type="button"
+                        onClick={() => addProductToCart(product.id)}
+                        >加入購物車</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
           </div>
           ))}
           </section>
           <div className="mt-4">
-          <table className="table align-middle">
+          {/* <table className="table align-middle">
             <thead>
               <tr>
                 <th>圖片</th>
@@ -225,15 +279,16 @@ useEffect (() => {
                     <button type="button" className="btn btn-outline-danger"
                     onClick={() => addProductToCart(product.id)}>
                       {/* <i className="fas fa-spinner fa-pulse"></i> */}
-                      加到購物車
+                      {/* 加到購物車
                     </button>
                   </div>
                 </td>
               </tr>
               ))}
             </tbody>
-          </table>
-          <div className="text-end">
+          </table> */}
+          <div className="text-end" style={{
+            padding: '0 0 .3rem'}}>
             <button className="btn btn-outline-danger" type="button"
             onClick={removeAllCartProducts}>清空購物車</button>
           </div>
