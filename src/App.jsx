@@ -235,12 +235,13 @@ function App() {
                             <div className="product-info-title h5">INFO</div>
                             <div className="product-info-product-name">商品：<span style={{color:"#f5e1fdc4"}}>{product.title}</span></div>
                             <div className="product-info-product-category">分類：<span style={{color:"#f5e1fdc4"}}>{product.category}</span></div>
-                            <div className="product-info-product-description">
-                              <div className="product-info-product-description-title">
+                            <div className="product-info-product-category">說明：<span style={{color:"#f5e1fdc4"}}>{product.description}</span></div>
+                            <div className="product-info-product-content">
+                              <div className="product-info-product-content-title">
                                 <span>商品描述</span>
                               </div>
-                              <div className="product-info-product-description-content">
-                                <span>{product.description}</span>
+                              <div className="product-info-product-content-content">
+                                <span>{product.content}</span>
                               </div>
                             </div>
                             <div className="product-info-price-display">售價：
