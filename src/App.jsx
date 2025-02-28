@@ -31,6 +31,7 @@ function App() {
   const [cardInfoPosition, setCardInfoPosition] = useState('right');
   const [loading, setLoading] = useState(false);
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
+  const [showDetailProducts, setShowDetailProducts] = useState([]);
   const getProduct = async () => {
   try {
     const res = await axios.get(`${API_BASE}/api/${API_PATH}/products/all`);
@@ -185,6 +186,16 @@ function App() {
       setCardInfoPosition('right');
     }
   };
+
+  const hasProductDetailShow = (productId) => {
+    setShowDetailProducts((prev) => {
+      if (prev.includes(productId)) {
+        return prev.filter(id => id !== productId);
+      } else {
+        return [...prev, productId];
+      }
+    });
+  }
     
 
   return (
@@ -329,10 +340,29 @@ function App() {
                 <th>總價</th>
               </tr>
             </thead>
-            <tbody colSpan="4">
+            <tbody>
               {cartProductData.length > 0 ? (cartProductData.map((cartProduct,index)=> (
-                <tr key={index}>
-                <td><div className="h6">{cartProduct.product.title}</div></td>                 
+                <tr key={index}>                
+                <td style={{display:"flex", alignItems:"center"}}> 
+                  <div className="cart-product-image"style={{ backgroundImage: `url(${cartProduct.product.imageUrl})` }}></div>
+                  <div className="cart-product-info">
+                  <div className="h6">{cartProduct.product.title}</div>
+                  <div className="cart-product-detail"
+                  onClick={() => hasProductDetailShow(cartProduct.product.id)}>
+                  <Icon type={`icon-down_arrow ${showDetailProducts.includes(cartProduct.product.id) ? 'icon-rotate' : ''}`}
+                  style={{ marginRight: '8px', }} />
+                  <span style={{fontSize:".8rem", color:"#d394d6"}}>{showDetailProducts === cartProduct.product.id ? "隱藏商品詳細資訊" : "點擊展開商品顯示詳情"}</span>
+                  </div>
+                  {showDetailProducts.includes(cartProduct.product.id) && (
+                  <div className="product-details"
+                  // style={{display: showDetailProductId === cartProduct.product.id ? "block" : "none"}}
+                  >
+                    <div className="details"
+                    style={{marginLeft:".9rem", fontSize:".75rem"}}
+                    >{cartProduct.product.description}</div>
+                  </div>)}
+                  </div>
+                </td>                 
                 <td className="h6">{cartProduct.product.price}</td>
                 <td className="h6" style={{ width: '150px' }}>{cartProduct.qty}</td>
                 <td className="h5">
