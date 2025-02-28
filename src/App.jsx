@@ -7,6 +7,7 @@ import "./assets/all.css"
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import LoadingEffect from './Component/LoadingEffect.jsx'
 const API_BASE = "https://ec-course-api.hexschool.io/v2";
 const API_PATH = "mevius";
 function App() {
@@ -28,7 +29,8 @@ function App() {
   const [hoveredProduct, setHoveredProduct] = useState(null);
   const [clickedProduct, setClickedProduct] = useState(null);
   const [cardInfoPosition, setCardInfoPosition] = useState('right');
-
+  const [loading, setLoading] = useState(false);
+  const [isButtonDisabled, setIsButtonDisabled] = useState(false);
   const getProduct = async () => {
   try {
     const res = await axios.get(`${API_BASE}/api/${API_PATH}/products/all`);
@@ -42,8 +44,10 @@ function App() {
   }, []);
 
   const addProductToCart = async (productId) => {
+    if (isButtonDisabled) return;
     try{
-       await axios.post(`${API_BASE}/api/${API_PATH}/cart`,
+      setIsButtonDisabled(true);
+      await axios.post(`${API_BASE}/api/${API_PATH}/cart`,
       {
         "data": {
           "product_id": productId,
@@ -61,6 +65,7 @@ function App() {
       theme: "colored",
     });
     setCartChanged(!cartChanged);
+    setTimeout(() => setIsButtonDisabled(false), 1000);
     }catch(err){
       console.log("error",err);
     }
@@ -122,6 +127,8 @@ function App() {
   }
   const onSubmit = async(data) =>{
     try{
+      
+      setLoading(true);
     const res = await axios.post(`${API_BASE}/api/${API_PATH}/order`,{
       "data": {
         "user": {
@@ -136,9 +143,10 @@ function App() {
     console.log(res.data.orderId);
     await orderPaid(res.data.orderId);
     setCartChanged(!cartChanged);
-    
     }catch(err){
     console.log("error",err);
+    }finally{
+      setTimeout(() => setLoading(false), 500);
     }
   }
 
@@ -171,12 +179,14 @@ function App() {
   const handleMouseEnter = (e) => {
     const cardRect = e.target.getBoundingClientRect();
     console.log("cardRect", cardRect.right, window.innerWidth);
-    if (cardRect.right > window.innerWidth) {
+    if (cardRect.right > window.innerWidth/1.3) {
       setCardInfoPosition('left'); 
     } else {
       setCardInfoPosition('right');
     }
   };
+    
+
   return (
     <>
     {/* <LoginPage  /> */}
@@ -201,6 +211,7 @@ function App() {
                   (<div>${product.price}</div>)}
                 </div>            
                 <div className ="product-card-body-mask">
+                  <div className ="product-info-hovered">
                   <div className="generate-info-btn"
                     onMouseEnter={() => setHoveredProduct(product.id)}
                     onMouseLeave={() => setHoveredProduct(null)}
@@ -244,13 +255,16 @@ function App() {
                           </div>
                         </div>
                         <div className="product-add-cart">
-                          <button className="product-add-cart-btn"
+                          <button className={`product-add-cart-btn 
+                          ${isButtonDisabled ? 'btn-disabled' : ''}`}
                           type="button"
                           onClick={() => addProductToCart(product.id)}
+                          disabled={isButtonDisabled}
                           >加入購物車</button>
                         </div>
                       </div>
                     </div>
+                  </div>
                   </div>
                 </div>
               </div>
@@ -457,7 +471,8 @@ function App() {
               rows="10"></textarea>
             </div>
             <div className="text-end">
-              <button type="submit" className="btn btn-danger">送出訂單</button>
+              <button type="submit" className="btn btn-danger"
+              disabled={cartProductData.length === 0}>送出訂單</button>
             </div>
           </form>
         </div>
@@ -465,6 +480,7 @@ function App() {
     </div>
     <div>
       <ToastContainer />
+      <LoadingEffect loadingState={loading}/>
     </div>
  </>
   )
