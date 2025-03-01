@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { useForm } from "react-hook-form";
-// import LoginPage from "./Component/LoginPage";
+import AuthPage from "./Component/AuthPage.jsx";
 import Icon from './Component/Icon';
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./assets/all.css"
@@ -200,7 +200,7 @@ function App() {
 
   return (
     <>
-    {/* <LoginPage  /> */}
+     <AuthPage getProducts={getProduct} setIsAuth={false} />
     <div id="app" >
       <div className="container">
           {/* 產品Modal */}
@@ -235,10 +235,11 @@ function App() {
                   查看
                   </div>
                   <div className={`product-info-board product-info-board-${cardInfoPosition}`}
-                  style={{ display: hoveredProduct === product.id || clickedProduct === product.id
-                        ? "block"
-                        : "none",
-                  }}>
+                  // style={{ display: hoveredProduct === product.id || clickedProduct === product.id
+                  //       ? "block"
+                  //       : "none",
+                  // }}> //他照成畫面閃爍的混亂ㄌ凸
+                  >
                     <div className="product-info-container">
                       <div className="product-info-card">
                         <div className="product-info-card-content">

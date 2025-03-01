@@ -1,58 +1,95 @@
-.container-login {
+.auth-container {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   height: 100vh;
-  background-color: #f8f9fa;
+  background-color: #ffffff;
 }
-
-.form-signin {
+.router-container {
+  background-color: #fff;
+  box-shadow: 0 2px 6px #6c8596;
+  border: 1px solid #e5e4ec;
+}
+.form-content {
+  padding: 12px 0;
+}
+.auth-form {
   position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
+  padding: 2rem;
+}
+.signIn-createAccount-tab {
+  display: flex;
+  flex: auto;
+  width: 100%;
+}
+.accountTab {
+  padding: 12px 16px;
+  font-weight: 700;
+  flex: 1;
+  background-color: transparent !important;
+  border: none !important;
+}
+.accountTab:hover {
+  color: #2788a9;
+}
+.form-control:focus {
+  box-shadow: none;
 }
 .userName,
 .passWord {
   position: absolute;
-  top: 65%;
-  left: 10px;
-  transform: translateY(-85%);
-  font-size: 16px;
-  background-color: #ffffff;
-  transition: all 0.3s ease;
+  top: 50% !important;
+  left: 2rem !important;
+  transform: translateY(-85%) !important;
+  font-size: 16px !important;
+  background-color: #ffffff !important;
+  transition: all 0.3s ease !important;
+  pointer-events: none !important;
+  color: #9da5ad !important;
+  padding: 0 !important;
   pointer-events: none;
-  color: #9da5ad;
+  height: 40%;
 }
 input:focus + .userName,
 input:not(:placeholder-shown) + .userName {
-  top: 5px;
-  left: 10px;
-  font-size: 12px;
+  top: 20% !important;
+  left: 2rem !important;
+  font-size: 0.8rem !important;
   color: #c985e7;
+  padding: 0 0.2rem !important;
+  height: 40%;
 }
 input:focus + .passWord,
 input:not(:placeholder-shown) + .passWord {
-  top: 5px;
-  left: 10px;
-  font-size: 12px;
+  top: 20% !important;
+  left: 2rem !important;
+  font-size: 0.8rem !important;
   color: #c985e7;
+  padding: 0 0.2rem !important;
+  height: 40%;
 }
-.form-floating,
-.signin-btn {
+.floating,
+.signin-btn,
+.create-btn {
   display: flex;
   position: relative;
   width: 350px;
-  margin: 20px;
+  margin-top: 30px;
+  justify-content: center;
 }
-.form-control {
-  width: 100%;
+
+.auth-input {
+  width: 90%;
   padding: 10px;
   border: 1px solid #ccc;
   border-radius: 5px;
-  font-size: 16px;
+  font-size: 1rem;
   outline: none;
+  margin: 0 0 0.7rem;
 }
 .login-form-title {
   text-align: center;
@@ -60,7 +97,8 @@ input:not(:placeholder-shown) + .passWord {
   color: #c985e7;
   margin: 20px;
 }
-.signin-btn {
+.signin-btn,
+.create-btn {
   /* width: 100%;*/
   padding: 10px;
   border: none;
@@ -75,13 +113,24 @@ input:not(:placeholder-shown) + .passWord {
 .form-check-label {
   font-size: 14px;
   color: #9da5ad;
+  padding: 0.1rem 0 0 0.3rem;
+  align-self: flex-start;
+  padding-left: 17px;
 }
-.form-check {
-  top: -5%;
+/* .form-check {
+  top: -3%;
   position: relative;
   display: flex;
   align-self: flex-start;
   margin: 0 20px 20px;
+} */
+.form-check-input:focus {
+  box-shadow: none;
+  border-color: #9da5ad;
+}
+.form-check-input:checked {
+  background-color: #2788a9;
+  border-color: #2788a9;
 }
 .Toastify__toast {
   width: 160px !important;
