@@ -13,6 +13,10 @@
 }
 .form-content {
   padding: 12px 0;
+  min-height: 390px;
+}
+.floating__inner {
+  width: 100%;
 }
 .auth-form {
   position: relative;
@@ -33,7 +37,7 @@
   background-color: transparent !important;
   border: none;
 }
-.accountTab + .active {
+.accountTab.active {
   color: #2788a9;
   border-top: 3px solid #2788a9;
 }
@@ -48,8 +52,8 @@
 .passWord {
   position: absolute;
   top: 50% !important;
-  left: 2rem !important;
-  transform: translateY(-85%) !important;
+  left: 1rem !important;
+  transform: translateY(-50%) !important;
   font-size: 16px !important;
   background-color: #ffffff !important;
   transition: all 0.3s ease !important;
@@ -57,25 +61,22 @@
   color: #9da5ad !important;
   padding: 0 !important;
   pointer-events: none;
-  height: 40%;
 }
 input:focus + .userName,
 input:not(:placeholder-shown) + .userName {
-  top: 20% !important;
-  left: 2rem !important;
+  top: 0% !important;
+  left: 1rem !important;
   font-size: 0.8rem !important;
-  color: #c985e7;
+  color: #c985e7 !important;
   padding: 0 0.2rem !important;
-  height: 40%;
 }
 input:focus + .passWord,
 input:not(:placeholder-shown) + .passWord {
-  top: 20% !important;
-  left: 2rem !important;
+  top: 0% !important;
+  left: 1rem !important;
   font-size: 0.8rem !important;
-  color: #c985e7;
+  color: #c985e7 !important;
   padding: 0 0.2rem !important;
-  height: 40%;
 }
 .floating,
 .signin-btn,
@@ -84,17 +85,25 @@ input:not(:placeholder-shown) + .passWord {
   position: relative;
   width: 350px;
   margin-top: 30px;
-  justify-content: center;
   flex-direction: column;
+  justify-content: center;
 }
 
 .auth-input {
-  width: 90%;
+  width: 100%;
   padding: 10px;
   border: 1px solid #ccc;
   border-radius: 5px;
   font-size: 1rem;
   outline: none;
+}
+.error_auth-input {
+  width: 100%;
+  padding: 10px;
+  border-radius: 5px;
+  font-size: 1rem;
+  outline: none;
+  border: 1px solid #dea1a1;
 }
 .login-form-title {
   text-align: center;
@@ -118,9 +127,11 @@ input:not(:placeholder-shown) + .passWord {
 .form-check-label {
   font-size: 14px;
   color: #9da5ad;
-  padding: 0.1rem 0 0 0.3rem;
+  padding: 0.2rem 0 0;
   align-self: flex-start;
-  padding-left: 17px;
+  cursor: pointer;
+  position: relative;
+  top: 1rem;
 }
 /* .form-check {
   top: -3%;
@@ -164,10 +175,18 @@ input:not(:placeholder-shown) + .passWord {
     background-position-x: -80px;
   }
 }
+.error-hint {
+  color: rgb(231, 107, 107);
+  font-size: 0.8rem;
+  position: absolute;
+  top: 2.9rem;
+  width: 100%;
+}
 .invalid-hint {
-  color: red;
+  color: rgb(233, 70, 70);
   font-size: 0.8rem;
 }
+
 .icon-remove {
   width: 16px;
   height: 16px;

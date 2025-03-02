@@ -8,7 +8,6 @@ const AuthPage=({ getProducts, setIsAuth })=>{
   const [tab, setTab] = useState("login")
 
   return(
-    <>
       <div className="wrapper">
           <div style={{
             display: "grid",
@@ -36,7 +35,6 @@ const AuthPage=({ getProducts, setIsAuth })=>{
             </div>
           </div>
       </div>
-    </>
   )
 }
 
@@ -64,10 +62,12 @@ return (
   <form className="auth-form"
   onSubmit={handleSubmit(onSubmit)}>
     <div className="input-fields">
-    <div className ="floating">
-    <input id="signInUsername"
-    className="auth-input"
-    {...register('email',{
+      <div className ="floating">
+        <div className="floating__inner">
+          <input 
+          id="signInUsername"
+          className={errors.email? "error_auth-input" : "auth-input"}
+          {...register('email',{
       required: {
         value: true,
         message: "此欄位必填"
@@ -76,29 +76,32 @@ return (
         value: /^\S+@\S+\.\S+$/i,
         message: "請輸入正確的 Email 格式"
       }
-    })} 
-    placeholder="" />
-    <label htmlFor="signInUsername" className="userName">Email</label>
-    {errors.email && <div className="invalid-hint">{errors?.email?.message}</div>}
-    </div>
-    <div className ="floating">
-    <input id="signInPassword"
-    className="auth-input"
-    {...register("password",{ 
-      required: "請輸入密碼" })} 
-      type={passwordType} 
-      placeholder="" />
-    {errors.password && <div className="invalid-hint">{errors?.password?.message}</div>}
-    <label htmlFor="signInPassword" className="passWord">Password</label>
-    </div>
+          })} 
+          placeholder="" />
+          <label htmlFor="signInUsername" className="userName">Email</label>
+        </div>
+          {errors.email && <div className="error-hint">{errors?.email?.message}</div>}
+      </div>
+      <div className ="floating">
+        <div className="floating__inner">
+          <input id="signInPassword"
+          className={errors.password? "error_auth-input" : "auth-input"}
+          {...register("password",{ 
+          required: "請輸入密碼" })} 
+          type={passwordType} 
+          placeholder="" />
+          <label htmlFor="signInPassword" className="passWord">Password</label>
+        </div>
+        {errors.password && <div className="error-hint">{errors?.password?.message}</div>}
+      </div>
     </div>
     <label className="form-check-label">
       <input type="checkbox"
       className="form-check-input"
       onChange={hasPasswordShow} /> 顯示密碼
     </label>
-      <button type="submit" className="signin-btn">登入</button>
-    </form>
+    <button type="submit" className="signin-btn">登入</button>
+  </form>
   )
 }
 
@@ -125,61 +128,67 @@ const RegisterForm = ({getProducts, setIsAuth}) =>{
     <form className="auth-form"
     onSubmit={handleSubmit(onSubmit)}>
       <div className="input-fields">
-      <div className ="floating">
-      <input id="createUsername"
-      className="auth-input"
-      {...register('email',{
-        required: {
-          value: true,
-          message: "請填入信箱"
-        },
-        pattern: {
-          value: /^\S+@\S+\.\S+$/i,
-          message: "請輸入正確的Email格式"
-        }
-      })} 
-      placeholder="" />
-      {errors.email && <div className="invalid-hint">{errors?.email?.message}</div>}
-      <label htmlFor="createUsername" className="userName">Email</label>
-      </div>
-      <div className ="floating">
-      <input id="createPassword"
-      className="auth-input"
-      {...register("password",{
-        required: {
-          value: true,
-          message: "此欄位位必填"
-        },
-        minLength: {
-          value: 6,
-          message: "密碼需要至少6字元"
-        },
-        maxLength: {
-          value: 20,
-          message: "不要超過20字元^^"
-        }
-        })
-      }
-      placeholder=""
-      type={passwordType} />
-      {errors.password && <div className="invalid-hint">{errors?.password?.message}</div>}
-      <label htmlFor="createPassword" className="passWord">Password</label>
-      </div>
-      <div className ="floating">
-      <input id="createConfirmPassword"
-      className="auth-input"
-      {...register("confirmPassword",{
-        required: {
-          value: true,
-          message: "請確認密碼"
-        },
-        validate: (value) => value === watch("password") || "密碼一樣嗎？"
-      })}
-      placeholder=""
-      type={passwordType} />
-      {errors.confirmPassword && <div className="invalid-hint">{errors?.confirmPassword?.message}</div>}
-      <label htmlFor="createConfirmPassword" className="passWord">Confirm Password</label>
-      </div>
+        <div className ="floating">
+          <div className="floating__inner">
+            <input id="createUsername"
+            className={errors.email? "error_auth-input" : "auth-input"}
+            {...register('email',{
+              required: {
+                value: true,
+                message: "請填入信箱"
+              },
+              pattern: {
+                value: /^\S+@\S+\.\S+$/i,
+                message: "請輸入正確的Email格式"
+              }
+            })} 
+            placeholder="" />
+            <label htmlFor="createUsername" className="userName">Email</label>
+          </div>
+          {errors.email && <div className="error-hint">{errors?.email?.message}</div>}
+        </div>
+        <div className ="floating">
+          <div className="floating__inner">
+          <input id="createPassword"
+          className={errors.password? "error_auth-input" : "auth-input"}
+          {...register("password",{
+            required: {
+              value: true,
+              message: "此欄位位必填"
+            },
+            minLength: {
+              value: 6,
+              message: "密碼需要至少6字元"
+            },
+            maxLength: {
+              value: 20,
+              message: "不要超過20字元^^"
+            }
+            })
+          }
+          placeholder=""
+          type={passwordType} />
+          <label htmlFor="createPassword" className="passWord">Password</label>
+          </div>
+          {errors.password && <div className="error-hint">{errors?.password?.message}</div>}
+        </div>
+        <div className ="floating">
+          <div className="floating__inner">
+            <input id="createConfirmPassword"
+            className={errors.confirmPassword? "error_auth-input" : "auth-input"}
+            {...register("confirmPassword",{
+              required: {
+                value: true,
+                message: "請確認密碼"
+              },
+              validate: (value) => value === watch("password") || "密碼一樣嗎？"
+            })}
+            placeholder=""
+            type={passwordType} />
+          <label htmlFor="createConfirmPassword" className="passWord">Confirm Password</label>
+          </div>
+          {errors.confirmPassword && <div className="error-hint">{errors?.confirmPassword?.message}</div>}
+        </div>
       </div>
       <label className="form-check-label">
         <input type="checkbox" 
