@@ -471,9 +471,12 @@ product-add-cart-btn .btn-disabled {
   width: 5rem;
   background-size: cover;
   background-position: center;
-  margin-right: 1rem;
+  margin: 0.1rem 1rem 0.1rem 1rem;
 }
-.cart-product-detail {
+.product-details {
+  margin-left: 0.9rem;
+}
+.cart-product-detail-title {
   display: flex;
   align-items: end;
   cursor: pointer;
@@ -492,7 +495,85 @@ product-add-cart-btn .btn-disabled {
 }
 
 .details {
-  position: absolute;
-
+  position: relative;
+  font-size: 0.75rem;
   width: 100%;
+}
+.cart_container {
+  margin-top: 3rem;
+}
+.cart_header_container {
+  padding: 0.3rem 0;
+  display: flex;
+}
+.remove_all_products_button {
+  border: 1px solid #b640dd;
+  border-radius: 5px;
+  padding: 0.4rem;
+  color: #000;
+}
+.cart_product-row-container {
+  color: #000;
+  background-color: white;
+  border: 5px solid rgb(33 37 42);
+}
+.cart-product-order-info {
+  display: flex;
+  align-items: center;
+}
+.cart-product-info {
+  margin: 1rem 0;
+  width: 350px;
+}
+.product-quantity {
+  height: 32px;
+  width: 150px;
+  margin-top: 0;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+  line-height: 1.2;
+}
+.quantity-group {
+  display: flex;
+  height: 32px;
+}
+.cart-product-quantity {
+  padding: 0.2rem 0.8rem;
+  border: 1px solid #d6d6d6;
+  color: #000;
+  text-align: center;
+  width: 40px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 400;
+}
+.minus-container {
+  align-items: center;
+  background-color: #fff;
+  box-sizing: border-box;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  height: 32px;
+  justify-content: center;
+  width: 32px;
+  border: 1px solid #d6d6d6;
+  border-radius: 8px 0 0 8px;
+  border-right: none;
+}
+.plus-container {
+  align-items: center;
+  background-color: #fff;
+  box-sizing: border-box;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  height: 32px;
+  justify-content: center;
+  width: 32px;
+  border: 1px solid #d6d6d6;
+  border-radius: 0 8px 8px 0;
+  border-left: none;
 }
