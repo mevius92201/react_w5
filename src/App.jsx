@@ -219,7 +219,7 @@ function App() {
                   <Icon type="icon-CP" style={{ marginRight: '8px' }} />
                   {product.origin_price > product.price ?
                   (<><del style={{fontSize: ".8rem", paddingRight: ".2rem"}}>{product.origin_price}</del><div style={{color: "#000"}}>{product.price}</div></> ):
-                  (<div>${product.price}</div>)}
+                  (<div style={{color:"#000"}}>{product.price}</div>)}
                 </div>            
                 <div className ="product-card-body-mask">
                   <div className ="product-info-hovered">
@@ -260,7 +260,7 @@ function App() {
                               <Icon type="icon-CP" style={{ marginRight: '8px' }} />
                               {product.origin_price > product.price ?
                               (<><del style={{fontSize: ".8rem", paddingRight: ".2rem"}}>{product.origin_price}</del><div>{product.price}</div></> ):
-                              (<div>${product.price}</div>)}
+                              (<div>{product.price}</div>)}
                             </div>
                             {/* <div className="product-info-product-thumbnail">
                               {(product.imagesUrl.map((item)=><><img src=item alt="..."/></>))} 

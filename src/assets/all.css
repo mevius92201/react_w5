@@ -36,6 +36,7 @@
   flex: 1;
   background-color: transparent !important;
   border: none;
+  color: #000;
 }
 .accountTab.active {
   color: #2788a9;
@@ -88,7 +89,10 @@ input:not(:placeholder-shown) + .passWord {
   flex-direction: column;
   justify-content: center;
 }
-
+.signin-btn,
+.create-btn {
+  text-align: center;
+}
 .auth-input {
   width: 100%;
   padding: 10px;
