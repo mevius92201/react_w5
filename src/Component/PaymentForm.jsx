@@ -242,5 +242,6 @@ PaymentForm.propTypes = {
   cartChanged: PropTypes.bool.isRequired,
   setCartChanged: PropTypes.func.isRequired,
   cartProductData: PropTypes.array.isRequired,
+  watch: PropTypes.func.isRequired,
 };
 export default PaymentForm;

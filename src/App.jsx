@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import AuthPage from "./Component/AuthPage.jsx";
+// import AuthPage from "./Component/AuthPage.jsx";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./assets/all.css";
 import axios from "axios";
@@ -40,7 +40,7 @@ function App() {
 
   return (
     <>
-      <AuthPage getProducts={getProduct} setIsAuth={false} />
+      {/* <AuthPage getProducts={getProduct} setIsAuth={false} /> */}
       <div id="app">
         <div className="container">
           <ProductDisplayPage

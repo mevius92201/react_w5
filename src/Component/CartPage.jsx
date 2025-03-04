@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import Icon from "./Icon";
+import PropTypes from "prop-types";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 const API_BASE = "https://ec-course-api.hexschool.io/v2";
@@ -110,12 +111,11 @@ function CartPage({
   function calTotalPrice() {
     return cartProductData.reduce((acc, cur) => acc + cur.final_total, 0);
   }
-
-  const addProductQuantity = async (id, index) => {
+  const updateProductQuantity = async (id, index, value) => {
     const current = productQuantity[index];
-    const updatedQuantity = current + 1;
-    if (updatedQuantity > 99) {
-      toast.error("數量不得大於99", {
+    const updateQuantity = current + value;
+    if (updateQuantity > 99 || updateQuantity < 1) {
+      toast.error("數量超出限制", {
         position: "top-center",
         autoClose: 1500,
         hideProgressBar: true,
@@ -126,17 +126,12 @@ function CartPage({
       });
       return;
     }
-    // setProductQuantity((prev) => {
-    //   const next = [...prev];
-    //   next[index] = updatedQuantity;
-    //   return next;
-    // });
-
     try {
+      setLoading(true);
       await axios.put(`${API_BASE}/api/${API_PATH}/cart/${id}`, {
         data: {
           product_id: id,
-          qty: updatedQuantity,
+          qty: updateQuantity,
         },
       });
       setCartChanged(!cartChanged);
@@ -150,44 +145,86 @@ function CartPage({
         draggable: false,
         theme: "colored",
       });
+    } finally {
+      setLoading(false);
     }
   };
-  const deductProductQuantity = async (id, index) => {
-    const current = productQuantity[index];
-    const currentQuantity = current - 1;
-    if (currentQuantity < 1) {
-      toast.error("數量不得小於1", {
-        position: "top-center",
-        autoClose: 1500,
-        hideProgressBar: true,
-        closeOnClick: true,
-        pauseOnHover: false,
-        draggable: false,
-        theme: "colored",
-      });
-      return;
-    }
 
-    try {
-      await axios.put(`${API_BASE}/api/${API_PATH}/cart/${id}`, {
-        data: {
-          product_id: id,
-          qty: currentQuantity,
-        },
-      });
-      setCartChanged(!cartChanged);
-    } catch (err) {
-      toast.error(err.response.data.message, {
-        position: "top-center",
-        autoClose: 1500,
-        hideProgressBar: true,
-        closeOnClick: true,
-        pauseOnHover: false,
-        draggable: false,
-        theme: "colored",
-      });
-    }
-  };
+  //   const addProductQuantity = async (id, index) => {
+  //     const current = productQuantity[index];
+  //     const updatedQuantity = current + 1;
+  //     if (updatedQuantity > 99) {
+  //       toast.error("數量不得大於99", {
+  //         position: "top-center",
+  //         autoClose: 1500,
+  //         hideProgressBar: true,
+  //         closeOnClick: true,
+  //         pauseOnHover: false,
+  //         draggable: false,
+  //         theme: "colored",
+  //       });
+  //       return;
+  //     }
+  // setProductQuantity((prev) => {
+  //   const next = [...prev];
+  //   next[index] = updatedQuantity;
+  //   return next;
+  // });
+  //     try {
+  //       await axios.put(`${API_BASE}/api/${API_PATH}/cart/${id}`, {
+  //         data: {
+  //           product_id: id,
+  //           qty: updatedQuantity,
+  //         },
+  //       });
+  //       setCartChanged(!cartChanged);
+  //     } catch (err) {
+  //       toast.error(err.response.data.message, {
+  //         position: "top-center",
+  //         autoClose: 1500,
+  //         hideProgressBar: true,
+  //         closeOnClick: true,
+  //         pauseOnHover: false,
+  //         draggable: false,
+  //         theme: "colored",
+  //       });
+  //     }
+  //   };
+  //   const deductProductQuantity = async (id, index) => {
+  //     const current = productQuantity[index];
+  //     const currentQuantity = current - 1;
+  //     if (currentQuantity < 1) {
+  //       toast.error("數量不得小於1", {
+  //         position: "top-center",
+  //         autoClose: 1500,
+  //         hideProgressBar: true,
+  //         closeOnClick: true,
+  //         pauseOnHover: false,
+  //         draggable: false,
+  //         theme: "colored",
+  //       });
+  //       return;
+  //     }
+  //     try {
+  //       await axios.put(`${API_BASE}/api/${API_PATH}/cart/${id}`, {
+  //         data: {
+  //           product_id: id,
+  //           qty: currentQuantity,
+  //         },
+  //       });
+  //       setCartChanged(!cartChanged);
+  //     } catch (err) {
+  //       toast.error(err.response.data.message, {
+  //         position: "top-center",
+  //         autoClose: 1500,
+  //         hideProgressBar: true,
+  //         closeOnClick: true,
+  //         pauseOnHover: false,
+  //         draggable: false,
+  //         theme: "colored",
+  //       });
+  //     }
+  //   };
 
   return (
     <section className="cart_board">
@@ -285,7 +322,7 @@ function CartPage({
                       <div
                         className="minus-container"
                         onClick={() => {
-                          deductProductQuantity(cartProduct.id, index);
+                          updateProductQuantity(cartProduct.id, index, -1);
                         }}
                       >
                         <div>-</div>
@@ -294,7 +331,7 @@ function CartPage({
                       <div
                         className="plus-container"
                         onClick={() => {
-                          addProductQuantity(cartProduct.id, index);
+                          updateProductQuantity(cartProduct.id, index, 1);
                         }}
                       >
                         <div>+</div>
@@ -354,5 +391,12 @@ function CartPage({
     </section>
   );
 }
+CartPage.propTypes = {
+  cartProductData: PropTypes.array.isRequired,
+  setCartProductData: PropTypes.func.isRequired,
+  cartChanged: PropTypes.bool.isRequired,
+  setCartChanged: PropTypes.func.isRequired,
+  setLoading: PropTypes.bool.isRequired,
+};
 
 export default CartPage;
