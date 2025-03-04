@@ -21,6 +21,7 @@ function App() {
     try {
       const res = await axios.get(`${API_BASE}/api/${API_PATH}/products/all`);
       setProductsData(res.data.products);
+      // console.log(res.data);
     } catch (err) {
       toast.error(err.response.data.message, {
         position: "top-center",

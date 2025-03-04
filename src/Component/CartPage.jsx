@@ -19,7 +19,7 @@ function CartPage({
     const getCartProducts = async () => {
       try {
         const res = await axios.get(`${API_BASE}/api/${API_PATH}/cart`);
-        // console.log(res.data.data.carts);
+        console.log(res.data.data.carts);
         setCartProductData(res.data.data.carts);
         setProductQuantity(res.data.data.carts.map((product) => product.qty));
       } catch (err) {
@@ -112,30 +112,31 @@ function CartPage({
   }
 
   const addProductQuantity = async (id, index) => {
-    let updatedQuantity;
-    productQuantity.forEach((qty, sequence) => {
-      if (index === sequence) {
-        updatedQuantity = qty + 1;
-        if (updatedQuantity > 99) {
-          toast.error("數量不得大於99", {
-            position: "top-center",
-            autoClose: 1500,
-            hideProgressBar: true,
-            closeOnClick: true,
-            pauseOnHover: false,
-            draggable: false,
-            theme: "colored",
-          });
-          return;
-        }
-        setProductQuantity((productQuantity[sequence] = updatedQuantity));
-      }
-    });
+    const current = productQuantity[index];
+    const updatedQuantity = current + 1;
+    if (updatedQuantity > 99) {
+      toast.error("數量不得大於99", {
+        position: "top-center",
+        autoClose: 1500,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: false,
+        draggable: false,
+        theme: "colored",
+      });
+      return;
+    }
+    // setProductQuantity((prev) => {
+    //   const next = [...prev];
+    //   next[index] = updatedQuantity;
+    //   return next;
+    // });
+
     try {
       await axios.put(`${API_BASE}/api/${API_PATH}/cart/${id}`, {
         data: {
           product_id: id,
-          qty: productQuantity[index],
+          qty: updatedQuantity,
         },
       });
       setCartChanged(!cartChanged);
@@ -152,29 +153,26 @@ function CartPage({
     }
   };
   const deductProductQuantity = async (id, index) => {
-    productQuantity.map((qty, sequence) => {
-      if (index === sequence) {
-        qty -= 1;
-        if (qty < 1) {
-          toast.error("數量不得小於1", {
-            position: "top-center",
-            autoClose: 1500,
-            hideProgressBar: true,
-            closeOnClick: true,
-            pauseOnHover: false,
-            draggable: false,
-            theme: "colored",
-          });
-          return;
-        }
-        setProductQuantity((productQuantity[sequence] = qty));
-      }
-    });
+    const current = productQuantity[index];
+    const currentQuantity = current - 1;
+    if (currentQuantity < 1) {
+      toast.error("數量不得小於1", {
+        position: "top-center",
+        autoClose: 1500,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: false,
+        draggable: false,
+        theme: "colored",
+      });
+      return;
+    }
+
     try {
       await axios.put(`${API_BASE}/api/${API_PATH}/cart/${id}`, {
         data: {
           product_id: id,
-          qty: productQuantity[index],
+          qty: currentQuantity,
         },
       });
       setCartChanged(!cartChanged);
@@ -206,13 +204,30 @@ function CartPage({
           </div>
         </div>
         <hr></hr>
-        <table style={{ width: "100%" }}>
+        <table style={{ width: "100%", tableLayout: "auto" }}>
           <thead>
             <tr>
               <th>訂單商品</th>
               <th>單價</th>
-              <th style={{ width: "150px" }}>數量</th>
-              <th>總價</th>
+              <th>
+                <div
+                  style={{
+                    paddingLeft: "2.2rem",
+                  }}
+                >
+                  數量
+                </div>
+              </th>
+              <th>
+                <div
+                  style={{
+                    paddingRight: "2.2rem",
+                    textAlign: "right",
+                  }}
+                >
+                  總價
+                </div>
+              </th>
             </tr>
           </thead>
           <tbody>
@@ -230,30 +245,24 @@ function CartPage({
                       <div className="h6">{cartProduct.product.title}</div>
                       <div
                         className="cart-product-detail-group"
-                        onClick={() =>
-                          hasProductDetailShow(cartProduct.product.id)
-                        }
+                        onClick={() => hasProductDetailShow(cartProduct.id)}
                       >
                         <div className="cart-product-detail-title">
                           <Icon
                             type={`icon-down_arrow ${
-                              showDetailProducts.includes(
-                                cartProduct.product.id
-                              )
+                              showDetailProducts.includes(cartProduct.id)
                                 ? "icon-rotate"
                                 : ""
                             }`}
                             style={{ marginRight: "8px" }}
                           />
                           <span style={{ fontSize: ".8rem", color: "#d394d6" }}>
-                            {showDetailProducts.includes(cartProduct.product.id)
+                            {showDetailProducts.includes(cartProduct.id)
                               ? "隱藏商品詳細資訊"
                               : "點擊展開商品顯示詳情"}
                           </span>
                         </div>
-                        {showDetailProducts.includes(
-                          cartProduct.product.id
-                        ) && (
+                        {showDetailProducts.includes(cartProduct.id) && (
                           <div className="product-details">
                             <div className="details">
                               {cartProduct.product.description}
@@ -263,10 +272,15 @@ function CartPage({
                       </div>
                     </div>
                   </td>
-                  <td>
-                    <div>{cartProduct.product.price}</div>
+                  <td className="cart-product-price">
+                    <span
+                      style={{ display: "inline-flex", alignItems: "center" }}
+                    >
+                      <Icon type="icon-CP" style={{ marginRight: "8px" }} />
+                      <div>{cartProduct.product.price}</div>
+                    </span>
                   </td>
-                  <td className="product-quantity">
+                  <td className="cart-product-quantity">
                     <div className="quantity-group">
                       <div
                         className="minus-container"
@@ -276,9 +290,7 @@ function CartPage({
                       >
                         <div>-</div>
                       </div>
-                      <div className="cart-product-quantity">
-                        {cartProduct.qty}
-                      </div>
+                      <div className="product-quantity">{cartProduct.qty}</div>
                       <div
                         className="plus-container"
                         onClick={() => {
@@ -289,29 +301,34 @@ function CartPage({
                       </div>
                     </div>
                   </td>
-                  <td className="h5">
-                    <span
-                      style={{ display: "inline-flex", alignItems: "center" }}
-                    >
-                      <Icon type="icon-CP" style={{ marginRight: "8px" }} />
-                      {cartProduct.final_total}
-                    </span>
-                    <div className="remove">
+                  <td className="cart-product-totalPrice">
+                    <div className="cart-product-totalPrice-wrapper">
                       <span
                         style={{ display: "inline-flex", alignItems: "center" }}
                       >
-                        <Icon
-                          type="icon-remove"
-                          style={{ marginRight: "8px" }}
-                        />
+                        <Icon type="icon-CP" style={{ marginRight: "8px" }} />
+                        {cartProduct.final_total}
                       </span>
-                      <button
-                        className="remove-btn"
-                        type="button"
-                        onClick={() => removeCartProduct(cartProduct.id)}
-                      >
-                        移除
-                      </button>
+                      <div className="remove">
+                        <span
+                          style={{
+                            display: "inline-flex",
+                            alignItems: "center",
+                          }}
+                        >
+                          <Icon
+                            type="icon-remove"
+                            style={{ marginRight: "8px" }}
+                          />
+                        </span>
+                        <button
+                          className="remove-btn"
+                          type="button"
+                          onClick={() => removeCartProduct(cartProduct.id)}
+                        >
+                          移除
+                        </button>
+                      </div>
                     </div>
                   </td>
                 </tr>
